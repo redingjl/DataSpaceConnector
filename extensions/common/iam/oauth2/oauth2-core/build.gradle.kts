@@ -19,6 +19,7 @@ plugins {
 val httpMockServer: String by project
 val nimbusVersion: String by project
 val okHttpVersion: String by project
+val rsApi: String by project
 
 dependencies {
     api(project(":spi:common:oauth2-spi"))
@@ -26,6 +27,9 @@ dependencies {
 
     implementation("com.nimbusds:nimbus-jose-jwt:${nimbusVersion}")
     implementation("com.squareup.okhttp3:okhttp:${okHttpVersion}")
+
+    implementation(project(":extensions:common:http"))
+    implementation("jakarta.ws.rs:jakarta.ws.rs-api:${rsApi}")
 
     testImplementation(project(":extensions:common:junit"))
 

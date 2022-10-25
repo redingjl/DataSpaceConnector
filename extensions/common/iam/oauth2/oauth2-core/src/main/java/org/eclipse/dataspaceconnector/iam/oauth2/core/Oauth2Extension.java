@@ -18,6 +18,7 @@ package org.eclipse.dataspaceconnector.iam.oauth2.core;
 import okhttp3.OkHttpClient;
 import org.eclipse.dataspaceconnector.core.jwt.TokenGenerationServiceImpl;
 import org.eclipse.dataspaceconnector.core.jwt.TokenValidationServiceImpl;
+import org.eclipse.dataspaceconnector.iam.oauth2.core.identity.DATRequestApiController;
 import org.eclipse.dataspaceconnector.iam.oauth2.core.identity.IdentityProviderKeyResolver;
 import org.eclipse.dataspaceconnector.iam.oauth2.core.identity.IdentityProviderKeyResolverConfiguration;
 import org.eclipse.dataspaceconnector.iam.oauth2.core.identity.Oauth2ServiceImpl;
@@ -37,6 +38,7 @@ import org.eclipse.dataspaceconnector.spi.security.CertificateResolver;
 import org.eclipse.dataspaceconnector.spi.security.PrivateKeyResolver;
 import org.eclipse.dataspaceconnector.spi.system.ServiceExtension;
 import org.eclipse.dataspaceconnector.spi.system.ServiceExtensionContext;
+import org.eclipse.dataspaceconnector.spi.WebService;
 
 import java.security.PrivateKey;
 import java.security.cert.CertificateEncodingException;
@@ -71,6 +73,9 @@ public class Oauth2Extension implements ServiceExtension {
     @EdcSetting
     private static final String NOT_BEFORE_LEEWAY = "edc.oauth.validation.nbf.leeway";
     private IdentityProviderKeyResolver providerKeyResolver;
+
+    @Inject
+    private WebService webService;
 
     @Inject
     private OkHttpClient okHttpClient;
@@ -123,6 +128,7 @@ public class Oauth2Extension implements ServiceExtension {
         );
 
         context.registerService(IdentityService.class, oauth2Service);
+        webService.registerResource(new DATRequestApiController(context.getMonitor(), oauth2Service));
     }
 
     @Override
